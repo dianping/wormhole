@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+
+
+<property>
+  <name>hive.hiveserver.kerberos.principal</name>
+  <value>hadoop/10.1.1.161@DIANPING.COM</value>
+</property>
+
+<property>
+  <name>hive.hiveserver.sasl.enabled</name>
+  <value>true</value>
+</property>
+
+
+</configuration>

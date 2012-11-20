@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<job id="MysqlReader_to_MysqlWriter_job">
+  <reader>
+    <plugin>MysqlReader</plugin>
+    <!--
+description:Mysql database's ip address
+mandatory:true
+name:ip
+-->
+    <ip>10.1.77.84</ip>
+    <!--
+default:3306
+description:Mysql database's port
+mandatory:true
+name:port
+-->
+    <port>3306</port>
+    <!--
+description:Mysql database's name
+mandatory:true
+name:dbname
+-->
+    <dbname>test</dbname>
+    <!--
+description:Mysql database's login name
+mandatory:true
+name:username
+-->
+    <username>root</username>
+    <!--
+description:Mysql database's login password
+mandatory:true
+name:password
+-->
+    <password>123456</password>
+    <!--
+default:
+range:
+description:self-defined sql statement
+mandatory:true
+name:sql
+-->
+    <sql>select * from a</sql>
+    <!--
+default:UTF-8
+range:UTF-8|GBK|GB2312
+description:mysql database's encode
+mandatory:false
+name:encoding
+-->
+    <encoding>UTF-8</encoding>
+    <!--
+range:
+description:mysql driver params, starts with no &, e.g. loginTimeOut=3000&yearIsDateType=false
+mandatory:false
+name:mysql.params
+-->
+    <mysql.params></mysql.params>
+    <!--
+default:1
+range:1-10
+description:concurrency of the job
+mandatory:false
+name:concurrency
+-->
+    <concurrency>10</concurrency>
+    <!--
+default:1000
+range:
+description:the block size in which the mysql data is read
+mandatory:false
+name:blockSize
+-->
+    <blockSize>2000000</blockSize>
+  </reader>
+  <writer>
+    <plugin>MysqlWriter</plugin>
+    <!--
+description:Mysql database ip address
+mandatory:true
+name:ip
+-->
+    <ip>10.1.77.84</ip>
+    <!--
+default:3306
+description:Mysql database port
+mandatory:true
+name:port
+-->
+    <port>3306</port>
+    <!--
+description:Mysql database name
+mandatory:true
+name:dbname
+-->
+    <dbname>test</dbname>
+    <!--
+description:Mysql database login username
+mandatory:true
+name:username
+-->
+    <username>root</username>
+    <!--
+description:Mysql database login password
+mandatory:true
+name:password
+-->
+    <password>123456</password>
+    <!--
+default:
+range:
+description:table to be dumped data into
+mandatory:true
+name:table
+-->
+    <tableName>b</tableName>
+    <!--
+range:
+description:order of columns
+mandatory:false
+name:colorder
+-->
+    <colorder>id,name</colorder>
+    <!--
+default:UTF-8
+range:UTF-8|GBK|GB2312
+description:
+mandatory:false
+name:encoding
+-->
+    <encoding>UTF-8</encoding>
+    <!--
+description:execute sql before dumping data
+mandatory:false
+name:pre
+-->
+    <pre>truncate table b</pre>
+    <!--
+description:execute sql after dumping data
+mandatory:false
+name:post
+-->
+    <post>update b set name = "" where id = 10</post>
+    <!--
+default:false
+range:[true/false]
+mandatory:false
+name:replace
+-->
+    <replace>false</replace>
+    <!--
+range:params1|params2|...
+description:mysql driver params
+mandatory:false
+name:mysql.params
+-->
+    <mysql.params></mysql.params>
+    <!--
+default:1
+range:1-100
+description:concurrency of the job
+mandatory:false
+name:concurrency
+-->
+    <concurrency>2</concurrency>
+    <!--
+default:
+range:
+description:the roll back sql
+mandatory:false
+name:rollback
+-->
+    <rollback></rollback>
+  </writer>
+</job>
