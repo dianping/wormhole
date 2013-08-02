@@ -20,8 +20,10 @@ import org.apache.log4j.Logger;
 import com.dp.nebula.wormhole.common.AbstractPlugin;
 import com.dp.nebula.wormhole.common.interfaces.ILine;
 import com.dp.nebula.wormhole.common.interfaces.ILineReceiver;
+import com.dp.nebula.wormhole.common.interfaces.ITransformer;
 import com.dp.nebula.wormhole.common.interfaces.IWriter;
 import com.dp.nebula.wormhole.plugins.common.DFSUtils;
+import com.dp.nebula.wormhole.transform.common.TransformerFactory;
 
 public class HdfsWriter extends AbstractPlugin implements IWriter {
 	private static final Logger logger = Logger.getLogger(HdfsWriter.class);
@@ -37,6 +39,10 @@ public class HdfsWriter extends AbstractPlugin implements IWriter {
 	private String replaceChar = "";
 	private Map<Character, Character> replaceCharMap = null;
 	private char[] nullChars = null;
+	
+	private String dataTransform;
+	private String dataTransformParams;
+
 	
 	private DfsWriterStrategy dfsWriterStrategy = null;
 	
@@ -60,6 +66,8 @@ public class HdfsWriter extends AbstractPlugin implements IWriter {
 		replaceCharMap = parseReplaceChar(replaceChar);
 		
 		dir = getParam().getValue(ParamKey.dir, this.dir);
+		dataTransform = getParam().getValue(ParamKey.dataTransformClass, "");
+		dataTransformParams = getParam().getValue(ParamKey.dataTransformParams, "");
 
 		try {
 			fs = DFSUtils.createFileSystem(new URI(dir),
@@ -136,8 +144,12 @@ public class HdfsWriter extends AbstractPlugin implements IWriter {
 
 	@Override
 	public void write(ILineReceiver lineReceiver) {
+		ITransformer transformer = null;
+		if(!dataTransform.isEmpty()) {
+			transformer = TransformerFactory.create(dataTransform);
+		}
 		try {
-			dfsWriterStrategy.write(lineReceiver);
+			dfsWriterStrategy.write(lineReceiver,transformer,dataTransformParams);
 		} catch (Exception ex) {
 			logger.error(String.format(
 					"Some errors occurs on starting writing: %s,%s",
@@ -152,7 +164,7 @@ public class HdfsWriter extends AbstractPlugin implements IWriter {
 	public interface DfsWriterStrategy {
 		void open();
 
-		void write(ILineReceiver receiver);
+		void write(ILineReceiver receiver,ITransformer transformer, String transformerParams);
 
 		void close();
 	}
@@ -211,11 +223,19 @@ public class HdfsWriter extends AbstractPlugin implements IWriter {
 		}
 
 		@Override
-		public void write(ILineReceiver receiver) {
+		public void write(ILineReceiver receiver,ITransformer transformer, String transformerParams) {
 			ILine line;
 			try {
 				while ((line = receiver.receive()) != null) {
+					if(transformer!=null ) {
+						if(transformerParams != null && !transformerParams.equals("")) {
+							line = transformer.transform(line,transformerParams);
+						} else {
+							line = transformer.transform(line);
+						}
+					}
 					int len = line.getFieldNum();
+					
 					for (int i = 0; i < len; i++) {
 						bw.write(replaceChars(line.getField(i), replaceCharMap));
 						if (i < len - 1)
@@ -278,14 +298,6 @@ public class HdfsWriter extends AbstractPlugin implements IWriter {
 			logger.error(String.format(
 					"HdfsWriter closing filesystem failed: %s,%s",
 					e.getMessage(), e.getCause()));
-		}
-	}
-	
-	public static void main(String[] args) {
-		HdfsWriter hw = new HdfsWriter();
-		Map<Character, Character> testCharMap = hw.parseReplaceChar("\r\n\t:\001");
-		for (Character c : testCharMap.keySet()) {
-			logger.debug(c + ":" + testCharMap.get(c));
 		}
 	}
 }

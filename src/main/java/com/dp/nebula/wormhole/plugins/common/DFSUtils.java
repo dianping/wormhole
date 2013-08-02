@@ -3,6 +3,7 @@ package com.dp.nebula.wormhole.plugins.common;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -23,7 +24,7 @@ import org.apache.log4j.Logger;
 public final class DFSUtils {
 	private static final Logger LOGGER = Logger.getLogger(DFSUtils.class);
 
-	private static FileSystem fs;
+	private static ThreadLocal<FileSystem> fs;
 
 	private static Map<String, Class<?>> typeMap = null;
 
@@ -119,7 +120,7 @@ public final class DFSUtils {
 							+ "com.hadoop.compression.lzo.LzopCodec,"
 							+ "org.apache.hadoop.io.compress.BZip2Codec");
 
-			cfg.set("hadoop.security.authorization", "true");
+			cfg.set("fs." + scheme + ".impl.disable.cache", "true");
 			cfg.set("hadoop.security.authentication", "kerberos");
 			cfg.set("dfs.namenode.kerberos.principal",
 					"hadoop/" + uri.getHost() + "@DIANPING.COM");
@@ -146,10 +147,10 @@ public final class DFSUtils {
 
 	public static FileSystem getFileSystem(String dir, String configure)
 			throws IOException {
-		if (null == fs) {
-			fs = FileSystem.get(getConf(dir, configure));
+		if (fs.get() == null) {
+			fs.set(FileSystem.get(getConf(dir, configure)));
 		}
-		return fs;
+		return fs.get();
 	}
 
 	public static Configuration newConf() {
@@ -227,9 +228,9 @@ public final class DFSUtils {
 		List<Path> list = new ArrayList<Path>();
 		FileStatus[] status = null;
 		if (isGlob) {
-			status = fs.globStatus(srcpath);
+			status = fs.get().globStatus(srcpath);
 		} else {
-			status = fs.listStatus(srcpath);
+			status = fs.get().listStatus(srcpath);
 		}
 
 		if (status != null) {
@@ -290,7 +291,7 @@ public final class DFSUtils {
 	 * */
 	public static void deleteFile(Path path, boolean flag) throws IOException {
 		LOGGER.debug("deleting:" + path.getName());
-		fs.delete(path, flag);
+		fs.get().delete(path, flag);
 	}
 
 	/**
@@ -332,6 +333,7 @@ public final class DFSUtils {
 			throw new IOException("No FileSystem for scheme: "
 					+ uri.getScheme());
 		}
+		conf.set("fs." + uri.getScheme() + ".impl.disable.cache", "true");
 		UserGroupInformation.setConfiguration(conf);
 		FileSystem fileSys = FileSystem.get(uri, conf);
 
@@ -395,4 +397,11 @@ public final class DFSUtils {
 			}
 		}
 	}
+	public static void main(String []args) throws URISyntaxException{
+		URI uri = new URI("hdfs://10.2.6.102/test");
+		System.out.println(uri.getScheme() );
+	}
 }
+
+	
+
