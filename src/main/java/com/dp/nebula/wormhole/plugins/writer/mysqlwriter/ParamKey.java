@@ -118,15 +118,14 @@ public final  class ParamKey {
 	 * @default:
 	 */
 	public static final String POST = "post";
-
 	/*
-	 * @name: replace
-	 * @description:
-	 * @range: [true/false]
+	 * @name: OPERATION
+	 * @description: which operation to perform
+	 * @range: INSERT|REPLACE|UPDATE
 	 * @mandatory: false
-	 * @default:false
+	 * @default:INSERT
 	 */
-	public static final String REPLACE = "replace";
+	public static final String OPERATION = "OPERATION";
 
 	 /*
       * @name: rollback

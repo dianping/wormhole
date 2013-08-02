@@ -30,16 +30,15 @@ public class MysqlLoader extends AbstractPlugin implements IWriter {
 		encodingMaps = new HashMap<String, String>();
 		encodingMaps.put("utf-8", "UTF8");
 	}
-	
+
 	private static final int MAX_ERROR_COUNT = 65535;
-	
-	
+
 	private int errorCodeAdd;
-		
+
 	private Connection conn;
 
 	private String ip = "";
-	
+
 	private String dbname = null;
 
 	private String table = null;
@@ -48,53 +47,66 @@ public class MysqlLoader extends AbstractPlugin implements IWriter {
 
 	private String encoding = null;
 
-	private String replace;
-	
+	private String replace = "";
+
 	private Logger logger = Logger.getLogger(MysqlWriter.class);
-	
+
 	private char sep = '\t';
-	
+
 	private char line = '\n';
-	
+
 	private String writerID;
-	
+
 	private String[] addFields = null;
-	
+
 	private long failedLinesThreshold;
-	
-	
 
 	@Override
 	public void init() {
-		this.ip = getParam().getValue(ParamKey.IP,"");
-		this.dbname = getParam().getValue(ParamKey.DBNAME,"");
-		this.table = getParam().getValue(ParamKey.TABLE,"");
+		this.ip = getParam().getValue(ParamKey.IP, "");
+		this.dbname = getParam().getValue(ParamKey.DBNAME, "");
+		this.table = getParam().getValue(ParamKey.TABLE, "");
 		this.columns = getParam().getValue(ParamKey.COLUMNS, "");
-		this.encoding = getParam().getValue(ParamKey.ENCODING, "UTF8").toLowerCase();
+		this.encoding = getParam().getValue(ParamKey.ENCODING, "UTF8")
+				.toLowerCase();
 		analyzeColumns();
-		this.replace = getParam().getBooleanValue(ParamKey.REPLACE, false)?"replace":"";
+		String operation = getParam().getValue(ParamKey.OPERATION, "").trim();
+		if (!"insert".equalsIgnoreCase(operation)
+				&& !"replace".equalsIgnoreCase(operation)) {
+			throw new WormholeException("operation " + operation
+					+ " not supported when using mysqlloader",
+					JobStatus.WRITE_FAILED.getStatus());
+		}
+
+		this.replace = "replace".equalsIgnoreCase(operation) ? "replace" : "";
 		if (encodingMaps.containsKey(this.encoding)) {
 			this.encoding = encodingMaps.get(this.encoding);
 		}
-		this.writerID	 = getParam().getValue(AbstractPlugin.PLUGINID, "");
-		this.failedLinesThreshold = getParam().getLongValue(ParamKey.FAIL_LINES, 0);
+		this.writerID = getParam().getValue(AbstractPlugin.PLUGINID, "");
+		this.failedLinesThreshold = getParam().getLongValue(
+				ParamKey.FAIL_LINES, 0);
 		int priority = getParam().getIntValue(ParamKey.PRIORITY, 0);
-		errorCodeAdd = MysqlWriter.PLUGIN_NO*JobStatus.PLUGIN_BASE + priority*JobStatus.WRITER_BASE;
+		errorCodeAdd = MysqlWriter.PLUGIN_NO * JobStatus.PLUGIN_BASE + priority
+				* JobStatus.WRITER_BASE;
 	}
 
 	@Override
 	public void connection() {
 		try {
-			conn = DBSource.getConnection(MysqlWriter.class, ip, writerID, dbname);
+			conn = DBSource.getConnection(MysqlWriter.class, ip, writerID,
+					dbname);
 		} catch (Exception e) {
-			throw new WormholeException(e, JobStatus.WRITE_CONNECTION_FAILED.getStatus() + errorCodeAdd);
+			throw new WormholeException(e,
+					JobStatus.WRITE_CONNECTION_FAILED.getStatus()
+							+ errorCodeAdd);
 		}
 	}
-	
+
 	@Override
 	public void write(ILineReceiver receiver) {
 		try {
-			conn = DBSource.getConnection(MysqlWriter.class, ip, writerID, dbname);
+			conn = DBSource.getConnection(MysqlWriter.class, ip, writerID,
+					dbname);
 			com.mysql.jdbc.Statement stmt = (com.mysql.jdbc.Statement) ((org.apache.commons.dbcp.DelegatingConnection) this.conn)
 					.getInnermostDelegate().createStatement(
 							ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -115,11 +127,11 @@ public class MysqlLoader extends AbstractPlugin implements IWriter {
 
 			/* load data begin */
 			String loadSql = this.makeLoadSql();
-			this.logger
-					.info(String.format(writerID + ": Load sql: %s.", loadSql));
+			this.logger.info(String.format(writerID + ": Load sql: %s.",
+					loadSql));
 
 			MysqlWriterInputStreamAdapter localInputStream = new MysqlWriterInputStreamAdapter(
-					writerID,receiver, this,addFields);
+					writerID, receiver, this, addFields);
 			stmt.setLocalInfileInputStream(localInputStream);
 			stmt.executeUpdate(loadSql);
 			getMonitor().increaseSuccessLine(localInputStream.getLineNumber());
@@ -131,47 +143,46 @@ public class MysqlLoader extends AbstractPlugin implements IWriter {
 			throw e;
 		} catch (Exception e) {
 			logger.error(writerID + " write failed");
-			throw new WormholeException(e,JobStatus.WRITE_FAILED.getStatus()+errorCodeAdd,writerID);
+			throw new WormholeException(e, JobStatus.WRITE_FAILED.getStatus()
+					+ errorCodeAdd, writerID);
 		} finally {
 			try {
 				conn.close();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				logger.error(writerID + " close connection failed");
 			}
 		}
 	}
-	
-	private void analyzeColumns(){
-		if(columns.isEmpty()) {
+
+	private void analyzeColumns() {
+		if (columns.isEmpty()) {
 			return;
 		}
 		String tmpColumns = columns;
-		String [] tmpColumnsArr = tmpColumns.split(",");
+		String[] tmpColumnsArr = tmpColumns.split(",");
 		addFields = new String[tmpColumnsArr.length];
 		columns = "";
 		int i = 0;
-		for(String field:tmpColumnsArr){
+		for (String field : tmpColumnsArr) {
 			int index = field.indexOf("=");
-			if(index != -1) {
-				if(index + 1 != field.length()) {
-					String columnValue = field.substring(index+1);
+			if (index != -1) {
+				if (index + 1 != field.length()) {
+					String columnValue = field.substring(index + 1);
 					addFields[i] = columnValue;
-				}
-				else {
+				} else {
 					addFields[i] = "";
 				}
-				field = field.substring(0,index).trim();
-			} 
+				field = field.substring(0, index).trim();
+			}
 			if (columns.isEmpty()) {
 				columns = field;
-			}
-			else {
+			} else {
 				columns = columns + "," + field;
 			}
-			i++;	
+			i++;
 		}
 	}
-	
+
 	private String quoteData(String data) {
 		if (data == null || data.trim().startsWith("@")
 				|| data.trim().startsWith("`")) {
@@ -191,19 +202,21 @@ public class MysqlLoader extends AbstractPlugin implements IWriter {
 	}
 
 	private String makeLoadSql() {
-		String sql = "LOAD DATA LOCAL INFILE '`sunny`' "
-				+ this.replace + " INTO TABLE ";
+		String sql = "LOAD DATA LOCAL INFILE '`sunny`' " + this.replace
+				+ " INTO TABLE ";
 		// fetch table
 		sql += this.quoteData(this.table);
 		// fetch charset
 		sql += " CHARACTER SET " + this.encoding;
 		// fetch records
-		//sql += String.format(" FIELDS TERMINATED BY '\001' ESCAPED BY '\\' ");
-		sql += String.format(" FIELDS TERMINATED BY '%c'  ESCAPED BY '\\\\' ", this.sep);
+		// sql +=
+		// String.format(" FIELDS TERMINATED BY '\001' ESCAPED BY '\\' ");
+		sql += String.format(" FIELDS TERMINATED BY '%c'  ESCAPED BY '\\\\' ",
+				this.sep);
 		// fetch lines
-		//sql += String.format(" LINES TERMINATED BY '\002' ");
+		// sql += String.format(" LINES TERMINATED BY '\002' ");
 		sql += String.format(" LINES TERMINATED BY '%c'", this.line);
-		if(failedLinesThreshold > 0) {
+		if (failedLinesThreshold > 0) {
 			sql += String.format(" IGNORE %d LINES", failedLinesThreshold);
 		}
 		// fetch colorder

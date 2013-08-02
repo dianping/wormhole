@@ -1,10 +1,12 @@
 package com.dp.nebula.wormhole.plugins.reader.greenplumreader;
 
-import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.commons.dbcp.DelegatingConnection;
+import org.apache.commons.io.LineIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.postgresql.PGConnection;
@@ -70,54 +72,116 @@ public class GreenplumReader extends AbstractPlugin implements IReader{
 		}
 	}
 	
+	protected String pgStringNormalize(String str){
+		char[] array = str.toCharArray();
+		StringBuffer result = new StringBuffer();
+		for(int i = 0; i < array.length; i ++){
+			if(array[i]=='\\'){
+				i++;
+				if(i < array.length) {
+					if(array[i]=='\\'){
+						result.append("\\");
+					} else if (array[i]=='t'){
+						result.append("\t");
+					} else if (array[i]=='n'){
+						result.append("\n");
+					} else if (array[i]=='r'){
+						result.append("\r");
+					}
+				} else {
+					break;
+				}
+			} else {
+				result.append(array[i]);
+			}
+		}
+		return result.toString();
+	}
+	
 	private void fetchData(ILineSender sender, PGCopyInputStream inputStream) {
-        byte[] bufferArray = new byte[BUFFER_LENGTH];
-        ILine line = new DefaultLine();
-    	StringBuffer field = new StringBuffer();
-    	boolean escape = false;
-           
-        try {
-        	int res = 0;
-        	while((res=inputStream.read(bufferArray))!=0) {
-        		String buffer = new String(bufferArray,0,res,this.encoding);
-            	char[] charArray = buffer.toCharArray();
-            	int size = charArray.length;
-            	for(int i= 0;i < size;i++){
-            		if(escape) {
-        				escape = false;
-            			if(charArray[i] == 'N') {
-            				line.addField(null);
-            				field = new StringBuffer();
-            				if(i+1 < size) {
-            					i++;
-            				}
-            			}
-            			else {
-            				field.append(charArray[i]);
-            			}
-        			} else if(charArray[i] == ESC) {
-            			escape = true;
-        			} else if(charArray[i] == DEP) {
-            			line.addField(field.toString());
-            			field = new StringBuffer();
-            		} else if (charArray[i] == BREAK) {
-            			this.sucLineCounter ++ ;
-            			line.addField(field.toString());
-            			sender.send(line);
-            			line = new DefaultLine();
-            			field = new StringBuffer();
-            		} else {
-            			field.append(charArray[i]);
-            		}
-            	}
-        		bufferArray = new byte[BUFFER_LENGTH];
-        	}
-        	sender.flush();
-        	getMonitor().increaseSuccessLine(sucLineCounter);
+		try {
+			Charset charset = Charset.forName(encoding);
+	    	InputStreamReader reader = new InputStreamReader(inputStream,charset);
+	    	LineIterator iterator = new LineIterator(reader);	    		
+	    	while(iterator.hasNext()) {
+	    		String lineData = iterator.nextLine();
+	    		ILine line = new DefaultLine();
+	    		for(String field:lineData.split(String.valueOf(DEP))){
+	    			if(field.equals("\\N")){
+	    				line.addField(null);
+	    			} else {
+	    				line.addField(pgStringNormalize(field));
+	    			}
+	    		}
+	    		sender.send(line);
+    			sucLineCounter ++;
+	    	}
+	    	sender.flush();
+	    	getMonitor().increaseSuccessLine(sucLineCounter);
+		} catch (IllegalStateException e) {
+	    	sender.flush();
+	    	getMonitor().increaseSuccessLine(sucLineCounter);
 		} catch (Exception e) {
 			logger.error("Reader copy data failed:",e);
 			throw new WormholeException(e,JobStatus.READ_FAILED.getStatus());
-		} 		
+		} 	
+
+//        byte[] bufferArray = new byte[BUFFER_LENGTH];
+//        ILine line = new DefaultLine();
+//    	StringBuffer field = new StringBuffer();
+//    	boolean escape = false;
+           
+//        try {
+//        	int res = 0;
+//        	while((res=inputStream.read(bufferArray))!=0) {
+//        		String buffer = new String(bufferArray,0,res,this.encoding);
+//            	char[] charArray = buffer.toCharArray();
+//            	int size = charArray.length;
+//            	for(int i= 0;i < size;i++){
+//            		if(escape) {
+//        				escape = false;
+//            			if(charArray[i] == 'N') {
+//            				line.addField(null);
+//            				field = new StringBuffer();
+//            				if(i+1 < size) {
+//            					if(charArray[i+1] == BREAK) {
+//            		        		//System.out.println(line.toString(','));
+//
+//                        			sender.send(line);
+//                        			line = new DefaultLine();
+//                        			field = new StringBuffer();
+//                        			sucLineCounter ++;
+//            					}
+//            					i++;
+//            				}
+//            			}
+//            			else {
+//            				field.append(charArray[i]);
+//            			}
+//        			} else if(charArray[i] == ESC) {
+//            			escape = true;
+//        			} else if(charArray[i] == DEP) {
+//
+//            			line.addField(field.toString());
+//            			field = new StringBuffer();
+//            		} else if (charArray[i] == BREAK) {
+//            			this.sucLineCounter ++ ;
+//            			line.addField(field.toString());
+//            			sender.send(line);
+//            			line = new DefaultLine();
+//            			field = new StringBuffer();
+//            		} else {
+//            			field.append(charArray[i]);
+//            		}
+//            	}
+//        		bufferArray = new byte[BUFFER_LENGTH];
+//        	}
+//        	sender.flush();
+//        	getMonitor().increaseSuccessLine(sucLineCounter);
+//		} catch (Exception e) {
+//			logger.error("Reader copy data failed:",e);
+//			throw new WormholeException(e,JobStatus.READ_FAILED.getStatus());
+//		} 		
 	}
 	
 	@Override

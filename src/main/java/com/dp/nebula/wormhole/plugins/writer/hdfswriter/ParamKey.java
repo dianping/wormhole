@@ -106,4 +106,31 @@ public final class ParamKey {
 	 * @default:
 	 */
 	public final static String hiveTableAddPartitionCondition = "hive_table_add_partition_condition";
+
+	/*
+     * @name: dataTransformClass
+     * @description: data transformer class path
+     * @range: 
+     * @mandatory: false
+     * @default: 
+     */
+	public final static String dataTransformClass = "dataTransformClass";
+	
+	/*
+     * @name: dataTransformClass
+     * @description: data transformer paramas
+     * @range: 
+     * @mandatory: false
+     * @default: 
+     */
+	public final static String dataTransformParams = "dataTransformParams";
+	
+	/*
+     * @name: createLzoIndexFile
+     * @description: whether to create lzo index file
+     * @range: true,false
+	 * @mandatory: false
+	 * @default: true
+     */
+	public final static String createLzoIndexFile = "createLzoIndexFile";
 }
