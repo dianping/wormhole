@@ -225,6 +225,21 @@
 			<artifactId>de.flapdoodle.embed.mongo</artifactId>
 			<version>1.26</version>
 		</dependency>
+		<dependency>
+			<groupId>com.force.api</groupId>
+			<artifactId>force-wsc</artifactId>
+			<version>27.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.force.api</groupId>
+			<artifactId>force-partner-api</artifactId>
+			<version>27.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase</artifactId>
+			<version>0.94.8.dp</version>
+		</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>
@@ -389,6 +404,33 @@
 									includes="com/dp/nebula/wormhole/plugins/**/${hive.reader.name}/**" />
 								<copy todir="${plugin.reader.dir}/${hive.reader.name}/"
 									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${hive.reader.name}/ParamKey.java" />
+									
+								<property name="salesforce.reader.name" value="salesforcereader" />
+								<mkdir dir="${plugin.reader.dir}/${salesforce.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${salesforce.reader.name}/${salesforce.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${salesforce.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${salesforce.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${salesforce.reader.name}/ParamKey.java" />
+									
+								<property name="hbase.reader.name" value="hbasereader" />
+								<mkdir dir="${plugin.reader.dir}/${hbase.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${hbase.reader.name}/${hbase.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${hbase.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${hbase.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${hbase.reader.name}/ParamKey.java" />
+									
+								<property name="hbase.writer.name" value="hbasewriter" />
+								<mkdir dir="${plugin.writer.dir}/${hbase.writer.name}" />
+								<jar
+									jarfile="${plugin.writer.dir}/${hbase.writer.name}/${hbase.writer.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${hbase.writer.name}/**" />
+								<copy todir="${plugin.writer.dir}/${hbase.writer.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/writer/${hbase.writer.name}/ParamKey.java" />
 
 								<mkdir dir="${transform.dir}" />
 								<jar jarfile="${transform.dir}/transformers-0.1.0.jar"
@@ -406,6 +448,7 @@
 								<mkdir dir="${hive.security.conf.dir}" />
 								<copy todir="${hive.security.conf.dir}" file="${conf.dir}/hive-site.xml" />
 								<copy todir="${hive.security.conf.dir}" file="${conf.dir}/core-site.xml" />
+								<copy todir="${hive.security.conf.dir}" file="${conf.dir}/hbase-site.xml" />
 
 
 								<mkdir dir="${release.dir}" />

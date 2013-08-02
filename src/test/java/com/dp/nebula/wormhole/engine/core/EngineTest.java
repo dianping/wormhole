@@ -61,6 +61,6 @@ public class EngineTest {
 		Engine engine = new Engine(engineConf, pluginConfs);
 		int jobStatus = engine.run(jobConf);
 		s_logger.info("wormhole return code-" + jobStatus);
-		assertEquals(jobStatus,0);
+		assertEquals(0,jobStatus);
 	}
 }

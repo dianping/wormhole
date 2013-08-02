@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -99,6 +101,7 @@ public class Engine {
 			ReaderManager readerManager = ReaderManager.getInstance(storageManager, monitorManager);
 			readerManager.run(readerConf, readerPluginParam);
 
+
 			s_logger.info("Start Writer Threads");
 			writerManager = WriterManager.getInstance(storageManager, monitorManager, writerNum);
 			writerManager.run(writerConf, pluginReg);
@@ -170,6 +173,15 @@ public class Engine {
 					s_logger.error("Roll back all failed ",e1);
 				}
 			}
+		} catch(InterruptedException e) {
+			status = JobStatus.FAILED;
+			s_logger.error("Nebula wormhole Job is Failed  as it is interrupted when prepare to read or write", e);
+		} catch(ExecutionException e) {
+			status = JobStatus.FAILED;
+			s_logger.error("Nebula wormhole Job is Failed  as it is failed when prepare to read or write", e);
+		} catch(TimeoutException e) {
+			status = JobStatus.FAILED;
+			s_logger.error("Nebula wormhole Job is Failed  as it is timeout when prepare to read or write", e);
 		} catch (Exception e) {
 			if(!status.isFailed()) {
 				status = JobStatus.FAILED;
@@ -177,8 +189,10 @@ public class Engine {
 			s_logger.error("Nebula wormhole Job is Failed!", e);
 			s_logger.error("Unknown Exception occurs, will roll back all");
 			try{
-				writerManager.killAll();
-				writerManager.rollbackAll();
+				if(writerManager != null) {
+					writerManager.killAll();
+					writerManager.rollbackAll();
+				}
 			}catch (Exception e1) {
 				s_logger.error("Roll back all failed ",e1);
 			}

@@ -40,6 +40,9 @@ public class HdfsDirSplitter extends AbstractSplitter {
 		fileType = param.getValue(ParamKey.fileType, this.fileType);
 
         prefix = param.getValue(ParamKey.prefixname, prefix);
+        
+        //add '_' before filename, make it invisible for hdfs
+        prefix = "_" + prefix;
 
 		concurrency = param.getIntValue(ParamKey.concurrency,
 				this.concurrency);

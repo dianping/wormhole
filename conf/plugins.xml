@@ -109,6 +109,32 @@
 		<name>hivereader</name>
 		<Path>plugins/reader/hivereader</Path>
 		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.hivereader.HiveReader</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.reader.hivereader.HiveReaderSplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.reader.hivereader.HiveReaderPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>salesforcereader</name>
+		<Path>plugins/reader/salesforcereader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.salesforcereader.SalesforceReader</PluginClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>hbasereader</name>
+		<Path>plugins/reader/hbasereader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.hbasereader.HBaseReader</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.reader.hbasereader.HBaseReaderSplitter</SplitterClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>hbasewriter</name>
+		<Path>plugins/writer/hbasewriter</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.writer.hbasewriter.HBaseWriter</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.writer.hbasewriter.HBaseSplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.writer.hbasewriter.HBaseWriterPeriphery</PeripheryClassName>
 		<MaxThreadNumber>10</MaxThreadNumber>
 	</plugin>
 	
