@@ -2,7 +2,9 @@
 .classpath
 .project
 target/
-.settings
+.settings/
+.svn/
+build/
 
 # Package Files #
 *.jar
