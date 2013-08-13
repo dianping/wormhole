@@ -448,8 +448,6 @@
 								<mkdir dir="${hive.security.conf.dir}" />
 								<copy todir="${hive.security.conf.dir}" file="${conf.dir}/hive-site.xml" />
 								<copy todir="${hive.security.conf.dir}" file="${conf.dir}/core-site.xml" />
-								<copy todir="${hive.security.conf.dir}" file="${conf.dir}/hbase-site.xml" />
-
 
 								<mkdir dir="${release.dir}" />
 								<tar destfile="${release.dir}/nebula-wormhole.tar" basedir="${build.base.dir}" />

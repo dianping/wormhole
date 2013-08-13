@@ -169,7 +169,7 @@ public class MysqlWriter extends AbstractPlugin implements IWriter {
 				builder.append(")");
 				count++;
 				if (count == BLOCK_SIZE) {
-					if ("update".equalsIgnoreCase(operation)){
+					if ("update".equalsIgnoreCase(operation)) {
 						builder.append(updateOpAppendStr);
 					}
 					updateOneBlock(builder.toString(), count);
@@ -186,7 +186,7 @@ public class MysqlWriter extends AbstractPlugin implements IWriter {
 
 			}
 			if (count != 0) {
-				if ("update".equalsIgnoreCase(operation)){
+				if ("update".equalsIgnoreCase(operation)) {
 					builder.append(updateOpAppendStr);
 				}
 				updateOneBlock(builder.toString(), count);
@@ -216,7 +216,9 @@ public class MysqlWriter extends AbstractPlugin implements IWriter {
 	private StringBuilder buildLine(ILine line, StringBuilder builder) {
 		String field;
 		int num = line.getFieldNum();
+
 		int len = num;
+
 		if (addFields != null) {
 			len = addFields.length;
 		}
@@ -228,6 +230,8 @@ public class MysqlWriter extends AbstractPlugin implements IWriter {
 				j++;
 			} else {
 				logger.error(writerID + " write failed");
+				logger.error("num:" + num + " len:" + len);
+				logger.error(line.toString(','));
 				throw new WormholeException(
 						"MysqlWriter: Fields number is less than column number ",
 						JobStatus.WRITE_FAILED.getStatus(), writerID);
@@ -253,6 +257,7 @@ public class MysqlWriter extends AbstractPlugin implements IWriter {
 			getMonitor().increaseSuccessLine(count);
 		} catch (SQLException e) {
 			logger.warn(writerID + ": One block insert failed", e);
+			logger.warn("failed sql: " + sqlStr);
 			getMonitor().increaseFailedLines(BLOCK_SIZE);
 		}
 	}

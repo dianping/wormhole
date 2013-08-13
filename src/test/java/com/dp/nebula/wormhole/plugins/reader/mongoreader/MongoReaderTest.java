@@ -3,14 +3,11 @@ package com.dp.nebula.wormhole.plugins.reader.mongoreader;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.dp.nebula.wormhole.common.BufferedLineExchanger;
@@ -41,6 +38,7 @@ public class MongoReaderTest {
 	private MongodProcess mongod;
 	private Mongo mongo;
 
+	@SuppressWarnings("deprecation")
 	@Before
 	public void beforeEach() throws Exception {
 		MongodStarter  runtime = MongodStarter .getDefaultInstance();

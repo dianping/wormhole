@@ -44,14 +44,9 @@ public class GreenplumReader extends AbstractPlugin implements IReader{
 	private Log logger = LogFactory.getLog(GreenplumReader.class);
 
 	private int sucLineCounter = 0;
-		
-	private final static char ESC = '\\';
-	
+			
 	private final static char DEP = '\t';
 	
-	private final static char BREAK = '\n';
-	
-	private final static int BUFFER_LENGTH = 8 * 1024*1024;
 
 	@Override
 	public void init() {

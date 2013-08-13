@@ -3,11 +3,7 @@ package com.dp.nebula.wormhole.plugins.common;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.util.Map;
 
-import junit.framework.Assert;
-
-import org.apache.hadoop.conf.Configuration;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -34,7 +30,6 @@ public class DFSUtilsTest {
 	
 	@Test
 	public void testGetTypeMap() throws IOException{
-		Map<String, Class<?>> typeMap = DFSUtils.getTypeMap();
 		assertNotNull(DFSUtils.getTypeMap());
 		assertNotNull(DFSUtils.getCompressionSuffixMap());
 	}
