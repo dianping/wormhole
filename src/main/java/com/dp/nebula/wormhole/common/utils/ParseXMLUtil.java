@@ -146,7 +146,6 @@ public final class ParseXMLUtil {
 	 * @return {@link EngineConf}.
 	 * 
 	 * */
-	@SuppressWarnings("unchecked")
 	public static IParam loadEngineConfig() {
 		File file = new File(Environment.ENGINE_CONF);
 

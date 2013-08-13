@@ -36,6 +36,7 @@ public class ParseXMLUtilTest {
 		assertEquals("hdfswriter", writerConf.get(0).getPluginName());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testLoadPluginConf() {
 		Map<String, IParam> pluginMap = ParseXMLUtil.loadPluginConf();

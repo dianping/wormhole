@@ -57,6 +57,7 @@ public class WriterThreadTest {
 		orderedExecution.verify(writer).finish();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private WriterThread createWriterThread(IWriter writer){
 		try {
 			Class clazz = Class.forName("com.dp.nebula.wormhole.engine.core.WriterThread");

@@ -37,7 +37,7 @@ final class WriterManager extends AbstractPluginManager {
 
 	private static final Log s_logger = LogFactory.getLog(WriterManager.class);
 	private static final String JOB_PARAM_FAILED_LINES_THRESHOLD = "failedLinesThreshold";
-	private static final int TIME_OUT = 10 * 60;// ten minutes
+	private static final int TIME_OUT = 10 * 60 * 60;// 60 * ten minutes
 
 	private Map<String, ExecutorService> writerPoolMap;
 	private StorageManager storageManager;
@@ -99,8 +99,8 @@ final class WriterManager extends AbstractPluginManager {
 				writerPeriphery = ReflectionUtil
 						.createInstanceByDefaultConstructor(
 								writerPeripheryClassName,
-								IWriterPeriphery.class, JarLoader
-										.getInstance(writerPath));
+								IWriterPeriphery.class,
+								JarLoader.getInstance(writerPath));
 			}
 			writerPeripheryMap.put(writerID, writerPeriphery);
 
@@ -111,8 +111,8 @@ final class WriterManager extends AbstractPluginManager {
 				splitter = new DefaultSplitter();
 			} else {
 				splitter = ReflectionUtil.createInstanceByDefaultConstructor(
-						splitterClassName, ISplitter.class, JarLoader
-								.getInstance(writerPath));
+						splitterClassName, ISplitter.class,
+						JarLoader.getInstance(writerPath));
 			}
 
 			WritePrepareCallable<List<IParam>> writerCallable = new WritePrepareCallable<List<IParam>>();
@@ -136,9 +136,9 @@ final class WriterManager extends AbstractPluginManager {
 			for (IParam p : splittedParam) {
 				IPluginMonitor pm = monitorManager.newWriterMonitor(writerID);
 				WriterThread rt = WriterThread.getInstance(LineExchangerFactory
-						.createNewLineReceiver(storageManager
-								.getStorageForWriter(writerID), null), p,
-						writeClassName, writerPath, pm);
+						.createNewLineReceiver(
+								storageManager.getStorageForWriter(writerID),
+								null), p, writeClassName, writerPath, pm);
 
 				Future<Integer> r = writerPool.submit(rt);
 				resultList.add(r);
@@ -221,8 +221,8 @@ final class WriterManager extends AbstractPluginManager {
 	public Set<String> getFailedWriterID() {
 		Set<String> failedIDs = new HashSet<String>();
 		for (String writerID : writerToResultsMap.keySet()) {
-			if (!isSuccess(writerToResultsMap.get(writerID), writerPoolMap
-					.get(writerID))) {
+			if (!isSuccess(writerToResultsMap.get(writerID),
+					writerPoolMap.get(writerID))) {
 				failedIDs.add(writerID);
 			}
 		}

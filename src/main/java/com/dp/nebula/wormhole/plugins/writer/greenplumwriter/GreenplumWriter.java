@@ -68,7 +68,7 @@ public class GreenplumWriter  extends AbstractPlugin implements IWriter {
     /* 从line中获取一行数据暂存数组*/
     private byte buffer[] = null;
     
-    private int length = 1024 * 1024 * 8;
+//    private int length = 1024 * 1024 * 8;
     		
 	private String writerID;
     
@@ -290,13 +290,14 @@ public class GreenplumWriter  extends AbstractPlugin implements IWriter {
         lineLen = this.buffer.length;
        
         try {
-        	 if(lineLen > length) {
-             	logger.error(writerID + ": line is too long");
-             	isSuccess = false;
-             }
-        	 else {
-        		 outputStream.writeToCopy(buffer, 0, lineLen);
-        	 }
+        	 outputStream.write(buffer);
+//        	 if(lineLen > length) {
+//             	logger.error(writerID + ": line is too long");
+//             	isSuccess = false;
+//             }
+//        	 else {
+//        		 outputStream.writeToCopy(buffer, 0, lineLen);
+//        	 }
 		} catch (Exception e) {
 			logger.warn(writerID + ": Copy data failed for one Line.");
 			if(!outputStream.isActive()) {

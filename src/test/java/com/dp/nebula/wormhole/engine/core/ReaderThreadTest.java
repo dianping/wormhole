@@ -57,6 +57,7 @@ public class ReaderThreadTest {
 		orderedExecution.verify(reader).finish();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private ReaderThread createReaderThread(IReader reader){
 		try {
 			Class clazz = Class.forName("com.dp.nebula.wormhole.engine.core.ReaderThread");

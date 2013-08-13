@@ -6,6 +6,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 class SOQLInfo {
 
 	static class SOQLParserException extends Exception {
+		private static final long serialVersionUID = -2914835962003977218L;
+
 		public SOQLParserException(String msg) {
 			super(msg);
 		}
