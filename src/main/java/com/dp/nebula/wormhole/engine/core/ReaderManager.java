@@ -38,7 +38,7 @@ final class ReaderManager extends AbstractPluginManager {
 	private List<Future<Integer>> threadResultList;
 
 	private static ReaderManager rmInstance;
-	private static final int TIME_OUT = 10 * 60;// ten minutes
+	private static final int TIME_OUT = 10 * 60 * 60;// 60 * ten minutes
 
 	private ReaderManager(StorageManager storageManager,
 			MonitorManager monitorManager) {

@@ -27,7 +27,8 @@ import com.dp.nebula.wormhole.plugins.common.DFSUtils;
 
 public class HiveReader extends AbstractPlugin implements IReader {
 	private static final Logger LOG = Logger.getLogger(HiveReader.class);
-	private static final char FIELD_SEPARATOR = '\001';
+	private static final String FIELD_SEPARATOR = "\001";
+	private static final String HIVE_COLUMN_NULL_VALUE = "\\N";
 
 	private String path = "jdbc:hive://10.1.1.161:10000/default";
 	private String username = "";
@@ -94,15 +95,22 @@ public class HiveReader extends AbstractPlugin implements IReader {
 			while (itr.hasNext()) {
 				ILine oneLine = lineSender.createNewLine();
 				String line = itr.nextLine();
-				String[] parts = StringUtils.split(line, FIELD_SEPARATOR);
+				String[] parts = StringUtils
+						.splitByWholeSeparatorPreserveAllTokens(line,
+								FIELD_SEPARATOR);
 				for (int i = 0; i < parts.length; i++) {
-					oneLine.addField(parts[i], i);
+					if (HIVE_COLUMN_NULL_VALUE.equals(parts[i])) {
+						oneLine.addField(null, i);
+					} else {
+						oneLine.addField(parts[i], i);
+					}
 				}
 				boolean flag = lineSender.send(oneLine);
 				if (flag) {
 					getMonitor().increaseSuccessLines();
 				} else {
 					getMonitor().increaseFailedLines();
+					LOG.warn(oneLine.toString('\t'));
 				}
 			}
 			lineSender.flush();

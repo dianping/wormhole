@@ -11,4 +11,5 @@
 		And the storage will be closed if out of time for $storageDistructLimit times -->
 	<storageWaitTime>600000</storageWaitTime>
 	<writerConsistency>true</writerConsistency>
+	<readerAndWriterPeripheralTimeout>600000</readerAndWriterPeripheralTimeout>
 </engine>
