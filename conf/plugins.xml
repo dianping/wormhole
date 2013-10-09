@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugins>
+	<plugin>
+		<name>mysqlreader</name>
+		<version>1</version>
+		<Path>plugins/reader/mysqlreader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.mysqlreader.MysqlReader</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.reader.mysqlreader.MysqlReaderKeySplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.reader.mysqlreader.MysqlReaderPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	
+	<plugin>
+		<name>mysqlwriter</name>
+		<version>1</version>
+		<Path>plugins/writer/mysqlwriter</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.writer.mysqlwriter.MysqlWriter</PluginClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.writer.mysqlwriter.MysqlWriterPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	
+	<plugin>
+		<name>greenplumreader</name>
+		<version>1</version>
+		<Path>plugins/reader/greenplumreader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.greenplumreader.GreenplumReader</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.reader.greenplumreader.GreenplumReaderSplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.reader.greenplumreader.GreenplumReaderPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	
+	<plugin>
+		<name>mongoreader</name>
+		<version>1</version>
+		<Path>plugins/reader/mongoreader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.mongoreader.MongoReader</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.reader.mongoreader.MongoReaderSplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.reader.mongoreader.MongoReaderPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	
+	<plugin>
+		<name>greenplumwriter</name>
+		<version>1</version>
+		<Path>plugins/writer/greenplumwriter</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.writer.greenplumwriter.GreenplumWriter</PluginClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.writer.greenplumwriter.GreenplumWriterPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	
+	<plugin>
+		<version>1</version>
+		<name>hdfsreader</name>
+		<Path>plugins/reader/hdfsreader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.hdfsreader.HdfsReader</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.reader.hdfsreader.HdfsDirSplitter</SplitterClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	
+	<plugin>
+		<version>1</version>
+		<name>hdfswriter</name>
+		<Path>plugins/writer/hdfswriter</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.writer.hdfswriter.HdfsWriter</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.writer.hdfswriter.HdfsDirSplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.writer.hdfswriter.HdfsWriterPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	
+	<plugin>
+		<version>1</version>
+		<name>sftpreader</name>
+		<Path>plugins/reader/sftpreader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.sftpreader.SftpReader</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.reader.sftpreader.SftpDirSplitter</SplitterClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	
+	<plugin>
+		<version>1</version>
+		<name>sftpwriter</name>
+		<Path>plugins/writer/sftpwriter</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.writer.sftpwriter.SftpWriter</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.writer.sftpwriter.SftpDirSplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.writer.sftpwriter.SftpWriterPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+
+	<plugin>
+		<version>1</version>
+		<name>mongowriter</name>
+		<Path>plugins/writer/mongowriter</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.writer.mongowriter.MongoWriter</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.writer.mongowriter.MongoWriterSplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.writer.mongowriter.MongoWriterPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	<plugin>
+		<name>sqlserverreader</name>
+		<version>1</version>
+		<Path>plugins/reader/sqlserverreader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.sqlserverreader.SqlserverReader</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.reader.sqlserverreader.SqlserverReaderSplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.reader.sqlserverreader.SqlserverReaderPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>hivereader</name>
+		<Path>plugins/reader/hivereader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.hivereader.HiveReader</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.reader.hivereader.HiveReaderSplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.reader.hivereader.HiveReaderPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>salesforcereader</name>
+		<Path>plugins/reader/salesforcereader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.salesforcereader.SalesforceReader</PluginClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>hbasereader</name>
+		<Path>plugins/reader/hbasereader</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.reader.hbasereader.HBaseReader</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.reader.hbasereader.HBaseReaderSplitter</SplitterClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>hbasewriter</name>
+		<Path>plugins/writer/hbasewriter</Path>
+		<PluginClassName>com.dp.nebula.wormhole.plugins.writer.hbasewriter.HBaseWriter</PluginClassName>
+		<SplitterClassName>com.dp.nebula.wormhole.plugins.writer.hbasewriter.HBaseSplitter</SplitterClassName>
+		<PeripheryClassName>com.dp.nebula.wormhole.plugins.writer.hbasewriter.HBaseWriterPeriphery</PeripheryClassName>
+		<MaxThreadNumber>10</MaxThreadNumber>
+	</plugin>
+	
+</plugins>

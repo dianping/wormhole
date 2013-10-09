@@ -1,0 +1,464 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>nebula-parent</artifactId>
+		<groupId>com.dp.nebula</groupId>
+		<version>1.0.0</version>
+	</parent>
+
+	<artifactId>nebula-wormhole</artifactId>
+	<version>0.1.0</version>
+	<name>arch-nebula-wormhole</name>
+
+
+	<repositories>
+		<repository>
+			<id>Ibiblio</id>
+			<name>Ibiblio</name>
+			<url>http://www.ibiblio.org/maven/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</repository>
+
+		<repository>
+			<id>repo1</id>
+			<name>repo1</name>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</repository>
+
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</repository>
+
+		<repository>
+			<id>scala-tools.org</id>
+			<name>Scala-tools Maven2 Repository</name>
+			<url>http://scala-tools.org/repo-releases</url>
+		</repository>
+
+		<repository>
+			<id>smartclient</id>
+			<name>www.smartclient.com</name>
+			<url>http://www.smartclient.com/maven2</url>
+		</repository>
+		<repository>
+			<id>central</id>
+			<name>Maven2 Central Repository</name>
+			<layout>default</layout>
+			<url>http://repo1.maven.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>maven-snapshot-server</id>
+			<name>Maven Snapshot Server</name>
+			<url>
+						http://snapshots.maven.codehaus.org/maven2/
+					</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.dp.nebula</groupId>
+			<artifactId>nebula-common</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.7.3</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.0-801.jdbc4</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.13</version>
+		</dependency>
+		<dependency>
+			<groupId>com.microsoft</groupId>
+			<artifactId>sqljdbc</artifactId>
+			<version>4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.directory.studio</groupId>
+			<artifactId>org.dom4j.dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.directory.studio</groupId>
+			<artifactId>org.apache.commons.io</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.8.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>3.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-easymock</artifactId>
+			<version>1.4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>1.1.3</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>maven-cobertura-plugin</artifactId>
+					<groupId>maven-plugins</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>maven-findbugs-plugin</artifactId>
+					<groupId>maven-plugins</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>xercesImpl</artifactId>
+					<groupId>xerces</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dp.cosmos</groupId>
+			<artifactId>hadoop-core</artifactId>
+			<version>0.20.203.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>hsqldb</artifactId>
+					<groupId>hsqldb</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-lzo</artifactId>
+			<version>0.4.15</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dp.cosmos</groupId>
+			<artifactId>hive-jdbc</artifactId>
+			<version>0.8.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.1.46</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>11.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.sshd</groupId>
+			<artifactId>sshd-core</artifactId>
+			<version>0.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.2.8</version>
+		</dependency>
+		<dependency>
+			<groupId>de.flapdoodle.embed</groupId>
+			<artifactId>de.flapdoodle.embed.mongo</artifactId>
+			<version>1.26</version>
+		</dependency>
+		<dependency>
+			<groupId>com.force.api</groupId>
+			<artifactId>force-wsc</artifactId>
+			<version>27.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.force.api</groupId>
+			<artifactId>force-partner-api</artifactId>
+			<version>27.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase</artifactId>
+			<version>0.94.8.dp</version>
+		</dependency>
+	</dependencies>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.3.3</version>
+				<configuration>
+					<findbugsXmlOutput>true</findbugsXmlOutput>
+					<!-- Optional directory to put findbugs xml report -->
+					<findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<property name="build.base.dir" value="build" />
+								<property name="classes.dir" value="target/classes" />
+								<property name="lib.dir" value="${build.base.dir}/lib" />
+								<property name="hive.security.conf.dir" value="${lib.dir}/conf" />
+								<property name="conf.dir" value="${build.base.dir}/conf" />
+								<property name="bin.dir" value="${build.base.dir}/bin" />
+								<property name="plugin.reader.dir" value="${build.base.dir}/plugins/reader" />
+								<property name="plugin.writer.dir" value="${build.base.dir}/plugins/writer" />
+								<property name="transform.dir" value="${build.base.dir}/transformers" />
+								<property name="release.dir" value="release" />
+								<property name="src.dir" value="src" />
+
+								<delete dir="${build.base.dir}" includeEmptyDirs="true" />
+								<delete dir="${release.dir}" includeEmptyDirs="true" />
+								<mkdir dir="${build.base.dir}" />
+								<mkdir dir="${conf.dir}" />
+								<copy todir="${conf.dir}">
+									<fileset dir="conf" />
+								</copy>
+								<mkdir dir="${bin.dir}" />
+								<copy todir="${bin.dir}">
+									<fileset dir="bin" />
+								</copy>
+								<chmod file="${bin.dir}/wormhole.sh" perm="755" />
+
+								<jar jarfile="${lib.dir}/nebula-wormhole-0.1.0.jar" basedir="${classes.dir}"
+									excludes="com/dp/nebula/wormhole/plugins/reader/**,com/dp/nebula/wormhole/plugins/writer/**,com/dp/nebula/wormhole/transform/impls/**">
+								</jar>
+
+								<property name="hdfs.writer.name" value="hdfswriter" />
+								<mkdir dir="${plugin.writer.dir}/${hdfs.writer.name}" />
+								<jar
+									jarfile="${plugin.writer.dir}/${hdfs.writer.name}/${hdfs.writer.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${hdfs.writer.name}/**" />
+								<copy todir="${plugin.writer.dir}/${hdfs.writer.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/writer/${hdfs.writer.name}/ParamKey.java" />
+
+								<property name="mysql.writer.name" value="mysqlwriter" />
+								<mkdir dir="${plugin.writer.dir}/${mysql.writer.name}" />
+								<jar
+									jarfile="${plugin.writer.dir}/${mysql.writer.name}/${mysql.writer.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${mysql.writer.name}/**" />
+								<copy todir="${plugin.writer.dir}/${mysql.writer.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/writer/${mysql.writer.name}/ParamKey.java" />
+
+								<property name="greenplum.writer.name" value="greenplumwriter" />
+								<mkdir dir="${plugin.writer.dir}/${greenplum.writer.name}" />
+								<jar
+									jarfile="${plugin.writer.dir}/${greenplum.writer.name}/${greenplum.writer.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${greenplum.writer.name}/**" />
+								<copy todir="${plugin.writer.dir}/${greenplum.writer.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/writer/${greenplum.writer.name}/ParamKey.java" />
+
+								<property name="sftp.writer.name" value="sftpwriter" />
+								<mkdir dir="${plugin.writer.dir}/${sftp.writer.name}" />
+								<jar
+									jarfile="${plugin.writer.dir}/${sftp.writer.name}/${sftp.writer.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${sftp.writer.name}/**" />
+								<copy todir="${plugin.writer.dir}/${sftp.writer.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/writer/${sftp.writer.name}/ParamKey.java" />
+
+								<property name="mongo.writer.name" value="mongowriter" />
+								<mkdir dir="${plugin.writer.dir}/${mongo.writer.name}" />
+								<jar
+									jarfile="${plugin.writer.dir}/${mongo.writer.name}/${mongo.writer.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${mongo.writer.name}/**" />
+								<copy todir="${plugin.writer.dir}/${mongo.writer.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/writer/${mongo.writer.name}/ParamKey.java" />
+
+								<property name="hdfs.reader.name" value="hdfsreader" />
+								<mkdir dir="${plugin.reader.dir}/${hdfs.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${hdfs.reader.name}/${hdfs.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${hdfs.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${hdfs.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${hdfs.reader.name}/ParamKey.java" />
+
+
+								<property name="mysql.reader.name" value="mysqlreader" />
+								<mkdir dir="${plugin.reader.dir}/${mysql.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${mysql.reader.name}/${mysql.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${mysql.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${mysql.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${mysql.reader.name}/ParamKey.java" />
+
+								<property name="greenplum.reader.name" value="greenplumreader" />
+								<mkdir dir="${plugin.reader.dir}/${greenplum.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${greenplum.reader.name}/${greenplum.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${greenplum.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${greenplum.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${greenplum.reader.name}/ParamKey.java" />
+
+								<property name="sftp.reader.name" value="sftpreader" />
+								<mkdir dir="${plugin.reader.dir}/${sftp.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${sftp.reader.name}/${sftp.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${sftp.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${sftp.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${sftp.reader.name}/ParamKey.java" />
+
+								<property name="mongo.reader.name" value="mongoreader" />
+								<mkdir dir="${plugin.reader.dir}/${mongo.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${mongo.reader.name}/${mongo.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${mongo.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${mongo.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${mongo.reader.name}/ParamKey.java" />
+
+								<property name="sqlserver.reader.name" value="sqlserverreader" />
+								<mkdir dir="${plugin.reader.dir}/${sqlserver.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${sqlserver.reader.name}/${sqlserver.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${sqlserver.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${sqlserver.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${sqlserver.reader.name}/ParamKey.java" />
+
+								<property name="hive.reader.name" value="hivereader" />
+								<mkdir dir="${plugin.reader.dir}/${hive.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${hive.reader.name}/${hive.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${hive.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${hive.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${hive.reader.name}/ParamKey.java" />
+									
+								<property name="salesforce.reader.name" value="salesforcereader" />
+								<mkdir dir="${plugin.reader.dir}/${salesforce.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${salesforce.reader.name}/${salesforce.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${salesforce.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${salesforce.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${salesforce.reader.name}/ParamKey.java" />
+									
+								<property name="hbase.reader.name" value="hbasereader" />
+								<mkdir dir="${plugin.reader.dir}/${hbase.reader.name}" />
+								<jar
+									jarfile="${plugin.reader.dir}/${hbase.reader.name}/${hbase.reader.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${hbase.reader.name}/**" />
+								<copy todir="${plugin.reader.dir}/${hbase.reader.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/reader/${hbase.reader.name}/ParamKey.java" />
+									
+								<property name="hbase.writer.name" value="hbasewriter" />
+								<mkdir dir="${plugin.writer.dir}/${hbase.writer.name}" />
+								<jar
+									jarfile="${plugin.writer.dir}/${hbase.writer.name}/${hbase.writer.name}-0.1.0.jar"
+									basedir="${classes.dir}"
+									includes="com/dp/nebula/wormhole/plugins/**/${hbase.writer.name}/**" />
+								<copy todir="${plugin.writer.dir}/${hbase.writer.name}/"
+									file="${src.dir}/main/java/com/dp/nebula/wormhole/plugins/writer/${hbase.writer.name}/ParamKey.java" />
+
+								<mkdir dir="${transform.dir}" />
+								<jar jarfile="${transform.dir}/transformers-0.1.0.jar"
+									basedir="${classes.dir}" includes="com/dp/nebula/wormhole/transform/impls/**" />
+
+								<mkdir dir="${lib.dir}" />
+								<dependencyfilesets prefix="nebula-wormhole." />
+								<copy todir="${lib.dir}" flatten="true">
+									<fileset refid="nebula-wormhole.maven.project.dependencies" />
+								</copy>
+								<delete>
+									<fileset dir="${lib.dir}" includes="**/xercesImpl-2.6.2.jar" />
+								</delete>
+
+								<mkdir dir="${hive.security.conf.dir}" />
+								<copy todir="${hive.security.conf.dir}" file="${conf.dir}/hive-site.xml" />
+								<copy todir="${hive.security.conf.dir}" file="${conf.dir}/core-site.xml" />
+
+								<mkdir dir="${release.dir}" />
+								<tar destfile="${release.dir}/nebula-wormhole.tar" basedir="${build.base.dir}" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
