@@ -141,6 +141,6 @@ public class GreenplumReaderPeriphery implements IReaderPeriphery{
 	}
 
 	@Override
-	public void doPost(IParam param, ITargetCounter counter) {		
+	public void doPost(IParam param, ITargetCounter counter,int faildSize) {		
 	}
 }

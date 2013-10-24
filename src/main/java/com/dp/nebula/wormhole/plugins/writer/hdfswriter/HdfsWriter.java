@@ -186,7 +186,7 @@ public class HdfsWriter extends AbstractPlugin implements IWriter {
 		public void close() {
 			IOUtils.cleanup(null, bw, out, co);
 		}
-
+		
 		@Override
 		public void open() {
 			try {
@@ -221,7 +221,7 @@ public class HdfsWriter extends AbstractPlugin implements IWriter {
 				logger.error(e.toString());
 			}
 		}
-
+		
 		@Override
 		public void write(ILineReceiver receiver,ITransformer transformer, String transformerParams) {
 			ILine line;
@@ -235,7 +235,6 @@ public class HdfsWriter extends AbstractPlugin implements IWriter {
 						}
 					}
 					int len = line.getFieldNum();
-					
 					for (int i = 0; i < len; i++) {
 						bw.write(replaceChars(line.getField(i), replaceCharMap));
 						if (i < len - 1)

@@ -193,7 +193,7 @@ final class WriterManager extends AbstractPluginManager {
 			for (String writerID : writerPoolMap.keySet()) {
 				ExecutorService es = writerPoolMap.get(writerID);
 				es.shutdownNow();
-				terminate(writerID);
+				terminate(writerID,failedIDs.size());   //添加参数，判断后续是否需要执行 doPost()
 			}
 			writerPoolMap.clear();
 			return true;
@@ -203,7 +203,7 @@ final class WriterManager extends AbstractPluginManager {
 		for (String writerID : writerPoolMap.keySet()) {
 			ExecutorService es = writerPoolMap.get(writerID);
 			if (es.isTerminated()) {
-				terminate(writerID);
+				terminate(writerID,failedIDs.size());  //write thread success, failedIDs.size = 0
 				needToRemoveWriterIDList.add(writerID);
 			} else {
 				result = false;
@@ -241,7 +241,7 @@ final class WriterManager extends AbstractPluginManager {
 		return result;
 	}
 
-	private void terminate(String writerID) {
+	private void terminate(String writerID,int faildSize) {
 		IWriterPeriphery writerPeriphery = writerPeripheryMap.get(writerID);
 		if (writerPeriphery == null) {
 			s_logger.error("can not find any writer periphery for " + writerID);
@@ -252,8 +252,7 @@ final class WriterManager extends AbstractPluginManager {
 			s_logger.error("can not find any job parameters for " + writerID);
 			return;
 		}
-
-		writerPeriphery.doPost(jobParams, monitorManager);
+		writerPeriphery.doPost(jobParams, monitorManager, faildSize);
 	}
 
 	public void rollbackAll() {

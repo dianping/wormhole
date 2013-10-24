@@ -13,7 +13,7 @@ class DefaultWriterPeriphery implements IWriterPeriphery {
 	}
 
 	@Override
-	public void doPost(IParam param, ITargetCounter counter) {
+	public void doPost(IParam param, ITargetCounter counter,int failedSize) {
 		// do nothing
 		
 	}

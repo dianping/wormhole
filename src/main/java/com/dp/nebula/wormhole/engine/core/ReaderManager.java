@@ -158,7 +158,7 @@ final class ReaderManager extends AbstractPluginManager {
 	public boolean terminate() {
 		isSuccess();
 		if (readerPool.isTerminated()) {
-			readerPeriphery.doPost(jobParams, monitorManager);
+			readerPeriphery.doPost(jobParams, monitorManager,0);
 			return true;
 		}
 		return false;

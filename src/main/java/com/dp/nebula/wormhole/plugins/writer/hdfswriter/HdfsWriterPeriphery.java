@@ -53,7 +53,7 @@ public class HdfsWriterPeriphery implements IWriterPeriphery {
 	}
 
 	@Override
-	public void doPost(IParam param, ITargetCounter counter) {
+	public void doPost(IParam param, ITargetCounter counter, int failedSize) {
 		deleteFilesOnHdfs(this.dir, this.prefixname, suffix);
 		// rename temp files, make them visible to hdfs
 		renameFiles();
