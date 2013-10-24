@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<job id="hivereader_to_hdfswriter_job">
+  <reader>
+    <plugin>hivereader</plugin>
+    <!--
+default:jdbc:hive://10.1.1.161:10000/default
+description:hive path ,format like "jdbc:hive://192.168.7.80:10000/default"
+mandatory:true
+name:path
+-->
+    <path>jdbc:hive://10.1.1.161:10000/bi</path>
+    <!--
+description:hive login name
+mandatory:false
+name:username
+-->
+    <username></username>
+    <!--
+description:hive login password
+mandatory:false
+name:password
+-->
+    <password></password>
+    <!--
+default:
+range:
+description:self-defined sql statement
+mandatory:false
+name:sql
+-->
+    <sql>select dt,kw,imprsn_cnt,click_cnt from bi.dm_dp_rsa_kw_sd</sql>
+  </reader>
+  <writer>
+    <plugin>hdfswriter</plugin>
+    <!--
+description:hdfs dir，hdfs://ip:port/path
+mandatory:true
+name:dir
+-->
+    <dir>file:///tmp/yukang.chen/wormhole-hive-test</dir>
+    <!--
+default:prefix
+description:hdfs filename
+mandatory:false
+name:prefixname
+-->
+    <prefix_filename>prefix</prefix_filename>
+    <!--
+default:\t
+range:\t,\001,","
+description:how to seperate fields
+mandatory:false
+name:fieldSplit
+-->
+    <field_split>\t</field_split>
+    <!--
+default:\n
+range:\n
+description:how to seperate fields
+mandatory:false
+name:lineSplit
+-->
+    <line_split>\n</line_split>
+    <!--
+default:UTF-8
+range:UTF-8|GBK|GB2312
+description:encode
+mandatory:false
+name:encoding
+-->
+    <encoding>UTF-8</encoding>
+    <!--
+range:
+description:how to replace null in hdfs
+mandatory:false
+name:nullChar
+-->
+    <nullchar></nullchar>
+    <!--
+range:e.g:\r\n:\001 it means replace \r and \n with \001
+description:replace characters, if this parameter is not set, we will replace \r \n and splitField with ' ' as default
+mandatory:false
+name:replaceChar
+-->
+    <replace_char></replace_char>
+    <!--
+default:com.hadoop.compression.lzo.LzopCodec
+range:com.hadoop.compression.lzo.LzopCodec|org.apache.hadoop.io.compress.BZip2Codec|org.apache.hadoop.io.compress.DefaultCodec|org.apache.hadoop.io.compress.GzipCodec
+description:compress codecs
+mandatory:false
+name:codecClass
+-->
+    <codec_class>com.hadoop.compression.lzo.LzopCodec</codec_class>
+    <!--
+default:4096
+range:[1024-4194304]
+description:how much the buffer size is
+mandatory:false
+name:bufferSize
+-->
+    <buffer_size>4096</buffer_size>
+    <!--
+default:TXT
+range:TXT|TXT_COMP
+description:TXT->TextFile,TXT_COMP->Compressed TextFile
+mandatory:true
+name:fileType
+-->
+    <file_type>TXT</file_type>
+    <!--
+default:1
+range:1-100
+description:concurrency of the job,,it also equals to split number
+mandatory:false
+name:concurrency
+-->
+    <concurrency>1</concurrency>
+    <!--
+default:false
+range:true,false
+description:hiveTableAddPartitionSwitch switch
+mandatory:false
+name:hiveTableAddPartitionSwitch
+-->
+    <hive_table_add_partition_switch>false</hive_table_add_partition_switch>
+    <!--
+range:e.g:dt='2010-01-01'@sampleDatabase.sampleTable
+description:specify table and partition condition,this parameter is valid only if hiveTableAddPartitionSwitch is set to true
+mandatory:false
+name:hiveTableAddPartitionSwitch
+-->
+    <hive_table_add_partition_condition></hive_table_add_partition_condition>
+  </writer>
+</job>

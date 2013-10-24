@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<engine>
+	<storageClassName>com.dp.nebula.wormhole.engine.storage.RAMStorage</storageClassName>
+	<storageLineLimit>1000</storageLineLimit>
+	<storageByteLimit>1000000</storageByteLimit>
+	<storageDistructLimit>1</storageDistructLimit>
+	<statusCheckInterval>1000</statusCheckInterval>
+	<!-- display monitor info when status check x times -->
+	<monitorInfoDisplayPeriod>10</monitorInfoDisplayPeriod>
+	<!-- reader or writer wait x ms for each other in a transfer process
+		And the storage will be closed if out of time for $storageDistructLimit times -->
+	<storageWaitTime>600000</storageWaitTime>
+	<writerConsistency>true</writerConsistency>
+	<readerAndWriterPeripheralTimeout>600000</readerAndWriterPeripheralTimeout>
+</engine>

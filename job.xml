@@ -1,0 +1,33 @@
+<job id="greenplumreader_to_hdfswriter_job">
+  <reader>
+    <plugin>mysqlreader</plugin>
+    <connectProps></connectProps>
+    <ip>10.1.77.85</ip>
+    <port>3306</port>
+    <dbname>TaurusCopy</dbname>
+    <username>root</username>
+    <password>123456</password>
+    <encoding>UTF-8</encoding>
+    <params></params>
+    <preCheck></preCheck>
+    <sql>select * from TaurusTaskAttempt</sql>
+    <columns></columns>
+    <autoIncKey></autoIncKey>  
+    <concurrency>1</concurrency>
+    <partitionName></partitionName>
+    <partitionValue></partitionValue>
+    <countSql></countSql>
+    <needSplit>false</needSplit>>
+  </reader>
+  <writer>
+    <plugin>sftpwriter</plugin>
+    <dir>sftp://root@10.1.77.85:58422/root/wormholeTest/</dir>
+    <password>12qwaszx</password>
+    <field_split>\001</field_split>
+    <line_split>\n</line_split>
+    <encoding>UTF-8</encoding>
+    <buffer_size>4096</buffer_size>
+    <nullchar>\N</nullchar>
+    <concurrency>1</concurrency>
+  </writer>
+</job>
