@@ -25,7 +25,6 @@ public class HBaseReader extends AbstractPlugin implements IReader {
 		this.tableName = getParam().getValue(ParamKey.htable, "");
 		this.columns = getParam().getValue(ParamKey.columns_key, "");
 		this.rowkeyRange = getParam().getValue(ParamKey.rowkey_range, "");
-
 		try {
 			proxy = HBaseProxy.newProxy(tableName);
 		} catch (IOException e) {
@@ -43,7 +42,6 @@ public class HBaseReader extends AbstractPlugin implements IReader {
 
 	@Override
 	public void connection() {
-		logger.info("HBaseReader start to connect to HBase .");
 		if (StringUtils.isBlank(rowkeyRange)) {
 			logger.info("HBaseReader prepare to query all records . ");
 			proxy.setStartEndRange(null, null);

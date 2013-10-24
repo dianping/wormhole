@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.util.Pair;
 import org.apache.log4j.Logger;
+import org.mortbay.log.Log;
 
 import com.dp.nebula.wormhole.common.interfaces.ILine;
 
@@ -88,12 +89,14 @@ public class HBaseProxy {
 
 		this.families = new byte[columns.length][];
 		this.qualifiers = new byte[columns.length][];
-	
+		
 		int idx = 0;
 		for (String column : columns) {
 			this.families[idx] = column.split(":")[0].trim().getBytes();
 			this.qualifiers[idx] = column.split(":")[1].trim().getBytes();
-			scan.addColumn(this.families[idx], this.qualifiers[idx]);
+			if ( this.families[idx].length != 0){
+				scan.addColumn(this.families[idx], this.qualifiers[idx]);
+			}
 			idx++;
 		}
 
@@ -111,8 +114,18 @@ public class HBaseProxy {
 		if (null == result) {
 			return false;
 		}
-
+		
 		for (int i = 0; i < this.families.length; i++) {
+			if (0 == this.families[i].length && 0 != this.qualifiers[i].length){
+				byte[] rowkey = result.getRow();
+				if (null != rowkey){
+					line.addField(new String(rowkey,encode));
+				}else {
+					line.addField(null);
+				}
+				continue;
+			}
+			
 			byte[] value = result.getValue(this.families[i], this.qualifiers[i]);
 			if (null == value) {
 				line.addField(null);
@@ -120,7 +133,6 @@ public class HBaseProxy {
 				line.addField(new String(value, encode));
 			}
 		}
-
 		return true;
 	}
 

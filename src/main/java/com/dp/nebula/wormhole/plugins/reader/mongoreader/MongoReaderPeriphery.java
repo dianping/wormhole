@@ -26,7 +26,7 @@ public class MongoReaderPeriphery implements IReaderPeriphery {
 	private String inputLimit = "";
 
 	@Override
-	public void doPost(IParam param, ITargetCounter counter) {
+	public void doPost(IParam param, ITargetCounter counter, int faildSize) {
 		// TODO Auto-generated method stub
 	}
 

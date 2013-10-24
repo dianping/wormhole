@@ -61,8 +61,6 @@ public class HdfsReader extends AbstractPlugin implements IReader {
 				HdfsReader.class.getClassLoader());
 	}
 	
-	
-
 	@Override
 	public void read(ILineSender lineSender) {
 		try {

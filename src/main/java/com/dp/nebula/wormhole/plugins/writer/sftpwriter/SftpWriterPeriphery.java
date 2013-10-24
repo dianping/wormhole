@@ -40,7 +40,7 @@ public class SftpWriterPeriphery implements IWriterPeriphery {
 	}
 
 	@Override
-	public void doPost(IParam param, ITargetCounter counter) {
+	public void doPost(IParam param, ITargetCounter counter, int faildSize) {
 		logger.info("doPost stage do nothing");
 	}
 

@@ -73,5 +73,57 @@ public final class ParamKey {
 	  * @default:1
 	  */
 	public final static String concurrency = "concurrency";
+	/*
+	  * @name: write_sleep
+	  * @description: slow the speed of write 
+	  * @range:
+	  * @mandatory: false
+	  * @default: false
+	  */
+	public final static String write_sleep = "write_sleep";
+	/*
+	  * @name: wait_time
+	  * @description: wait_time of the write 
+	  * @range:
+	  * @mandatory: 
+	  * @default:1000
+	  */
+	public final static String wait_time = "wait_time"; 
+	/*
+	  * @name: num_to_wait
+	  * @description: num_to_wait of the write 
+	  * @range:
+	  * @mandatory: 
+	  * @default:1000
+	  */
+	public final static String num_to_wait = "num_to_wait"; 
+	
+	/*
+	  * @name: putTimeStamp
+	  * @description: hours to decrease the current_timestamp
+	  * @range:
+	  * @mandatory: 
+	  * @default: 5
+	  */
+	public final static String hoursDecTimeStamp = "hoursDecTimeStamp"; 
+	
+	/*
+	  * @name: isDeleteData
+	  * @description: after insert data, do you want to delete old data
+	  * @range:
+	  * @mandatory: false
+	  * @default: true
+	  */
+	public final static String isDeleteData = "isDeleteData"; 
+	/*
+	  * @name: isMajor_compact
+	  * @description: after insert&delete data, do you want to compact
+	  * @range:
+	  * @mandatory: true
+	  * @default: true
+	  */
+	public final static String isMajor_Compact = "isMajor_Compact"; 
+	
+	
 	
 }

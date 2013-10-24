@@ -26,11 +26,18 @@ public class HBaseWriter extends AbstractPlugin implements IWriter {
 	private byte[][] columnFamilies;
 	private byte[][] qualifiers;
 	private HBaseClient client;
+	private int num_to_wait;
+	private int wait_time;
+	private boolean write_sleep;
 
 	@Override
 	public void init() {
 		rowKeyIndex = getParam().getIntValue(ParamKey.rowKeyIndex, 0);
 		columnsName = getParam().getValue(ParamKey.columnsName);
+		num_to_wait = getParam().getIntValue(ParamKey.num_to_wait);
+		wait_time   = getParam().getIntValue(ParamKey.wait_time);
+		write_sleep = getParam().getBooleanValue(ParamKey.write_sleep);
+		
 		parseColumnsMapping(columnsName);
 	}
 
@@ -70,6 +77,7 @@ public class HBaseWriter extends AbstractPlugin implements IWriter {
 	@Override
 	public void write(ILineReceiver lineReceiver) {
 		ILine line;
+		int count = 0;
 		try {
 			while ((line = lineReceiver.receive()) != null) {
 				int fieldNum = line.getFieldNum();
@@ -83,7 +91,9 @@ public class HBaseWriter extends AbstractPlugin implements IWriter {
 							"hbase rowkey should not be empty",
 							JobStatus.WRITE_DATA_EXCEPTION.getStatus());
 				}
+
 				client.setRowKey(rowKey.getBytes(DEFAULT_ENCODING));
+				
 				for (int i = 0; i < rowKeyIndex; i++) {
 					if (line.getField(i) == null) {
 						continue;
@@ -98,7 +108,16 @@ public class HBaseWriter extends AbstractPlugin implements IWriter {
 					client.addColumn(columnFamilies[i-1], qualifiers[i-1], line
 							.getField(i).getBytes(DEFAULT_ENCODING));
 				}
+				
 				client.insert();
+				count ++;
+				// for slow the hbase write speed 
+				if ( write_sleep ){
+					if ( count >= num_to_wait ){
+						Thread.sleep(wait_time);
+						count = 0;
+					}
+				}
 				getMonitor().increaseSuccessLines();
 			}
 		} catch (Exception e) {

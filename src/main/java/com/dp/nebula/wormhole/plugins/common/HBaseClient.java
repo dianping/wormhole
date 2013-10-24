@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTable;
@@ -84,6 +85,13 @@ public final class HBaseClient {
 		setPut(put);
 	}
 
+	@SuppressWarnings("deprecation")
+	public void setRowKeyWithTs(byte[] rowkey, long ts) {
+		Put put = new Put(rowkey, ts);
+		put.setWriteToWAL(writeAheadLog);
+		setPut(put);
+	}
+
 	public void addColumn(byte[] family, byte[] qualifier, byte[] value) {
 		getPut().add(family, qualifier, value);
 	}
@@ -105,13 +113,13 @@ public final class HBaseClient {
 			closeHBaseAdmin();
 		}
 	}
-	
-	public synchronized void closeHBaseAdmin() throws IOException{
+
+	public synchronized void closeHBaseAdmin() throws IOException {
 		if (admin != null) {
 			admin.close();
 			admin = null;
 		}
-		
+
 	}
 
 	public void flush() throws IOException {
@@ -163,6 +171,71 @@ public final class HBaseClient {
 		rs.close();
 	}
 
+	/*
+	 * delete table data by timeStamp added by mt
+	 */
+	public void deleteTableDataByTimestamp(String table, long timeStampDel)
+			throws IOException, InterruptedException {
+		HTableInterface htbale = getHTable();
+		int count = 0;
+		long current_timestamp = System.currentTimeMillis();
+		long end_timestamp = current_timestamp - timeStampDel * 1000;
+		long period = 10000;
+		long delStartTime = System.currentTimeMillis();
+		Scan s = new Scan();
+		s.setCaching(SCAN_CACHE_SIZE);
+		s.setMaxVersions();
+		s.setTimeRange(0, end_timestamp); // 扫描出 需要删除的row，条件：指定的timestamp范围
+		ResultScanner rs = htbale.getScanner(s);
+		List<Delete> deleteList = new ArrayList<Delete>(BATCH_DELETE_SIZE);
+
+		LOG.info(String.format(
+				"start to delete table %s data by timestamp range [ 0 ~ %d ]",
+				table, end_timestamp));
+		for (Result r : rs) {
+			Delete dataDelete = new Delete(r.getRow());
+			KeyValue[] kv = r.raw();
+			for (int i = 0; i < kv.length; i++) {
+				dataDelete = dataDelete.deleteColumns(kv[i].getFamily(),
+						kv[i].getQualifier(), kv[i].getTimestamp()); 
+			}
+			deleteList.add(dataDelete);
+			count++;
+			if ((count % period) == 0) {
+				LOG.info(String.format(
+						"has deleted table %s data for %d rows!", table, count));
+			}
+			if (deleteList.size() >= BATCH_DELETE_SIZE) {
+				htbale.delete(deleteList);
+				deleteList.clear();
+			}
+		}
+		if (deleteList.size() > 0) {
+			htbale.delete(deleteList);
+		}
+		rs.close();
+		long delEndTime = System.currentTimeMillis();
+		LOG.info(String
+				.format("deleted table %s data by timestamp %d for %d rows *** used %d ms ...",
+						table, timeStampDel, count, (delEndTime - delStartTime)));
+	}
+
+	public void major_Compact(String table) throws IOException,
+			InterruptedException {
+		LOG.info(String.format("start to compact table %s ...", table));
+		HBaseAdmin hAdmin = getAdmin();
+		if (null != hAdmin) {
+			hAdmin.majorCompact(table);
+			LOG.info(String.format("compact table %s completed...", table));
+			hAdmin.close();
+		} else {
+			LOG.error(String.format(
+					" compact: can not get HbaseAdmin for table %s", table));
+		}
+	}
+
+	// end of add by mt
+
 	public void truncateTable(String table) throws IOException {
 		HTableDescriptor tableDesc = getHTable().getTableDescriptor();
 		admin.disableTable(table);
@@ -179,6 +252,13 @@ public final class HBaseClient {
 			threadLocalHtable.set(htable);
 		}
 		return htable;
+	}
+
+	private HBaseAdmin getAdmin() throws IOException {
+		if (admin == null) {
+			admin = new HBaseAdmin(conf);
+		}
+		return admin;
 	}
 
 	private Put getPut() {

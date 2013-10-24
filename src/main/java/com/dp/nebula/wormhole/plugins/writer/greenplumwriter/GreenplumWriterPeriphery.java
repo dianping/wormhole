@@ -99,7 +99,7 @@ public class GreenplumWriterPeriphery implements IWriterPeriphery{
 	}
 
 	@Override
-	public void doPost(IParam param, ITargetCounter counter) {
+	public void doPost(IParam param, ITargetCounter counter,int faildSize) {
 		if(!countSql.isEmpty()){
 			try{
 				conn = DBSource.getConnection(GreenplumWriter.class, ip, writerID, dbname);

@@ -5,6 +5,6 @@ interface ITransmissionPeriphery {
 	
 	void prepare(IParam param, ISourceCounter counter);
 	
-	void doPost(IParam param, ITargetCounter counter);
+	void doPost(IParam param, ITargetCounter counter, int faildSize);
 
 }

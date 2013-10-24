@@ -135,7 +135,7 @@ public class MysqlReaderPeriphery implements IReaderPeriphery{
 	}
 	
 	@Override
-	public void doPost(IParam param, ITargetCounter counter) {
+	public void doPost(IParam param, ITargetCounter counter, int faildSize) {
 		
 	}
 
