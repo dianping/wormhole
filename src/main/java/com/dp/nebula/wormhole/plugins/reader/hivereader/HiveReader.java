@@ -110,7 +110,7 @@ public class HiveReader extends AbstractPlugin implements IReader {
 					getMonitor().increaseSuccessLines();
 				} else {
 					getMonitor().increaseFailedLines();
-					LOG.warn(oneLine.toString('\t'));
+					LOG.debug("failed to send line: " + oneLine.toString('\t'));
 				}
 			}
 			lineSender.flush();
