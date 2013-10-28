@@ -17,6 +17,7 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
 import com.dp.nebula.wormhole.common.JobStatus;
@@ -148,6 +149,15 @@ public final class HBaseClient {
 			throw new WormholeException(String.format("htable %s is disabled",
 					htable), JobStatus.PRE_CHECK_FAILED.getStatus());
 		}
+	}
+	
+	public void deleteTableDataByRowkeys(List<String> rowkeys) throws IOException {
+		HTableInterface htable = getHTable();
+		List<Delete> rowkeysToDelete = new ArrayList<Delete>();
+		for (String key : rowkeys) {
+			rowkeysToDelete.add(new Delete(Bytes.toBytes(key)));
+		}
+		htable.delete(rowkeysToDelete);
 	}
 
 	public void deleteTableData(String table) throws IOException {
