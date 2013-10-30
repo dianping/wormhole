@@ -1,6 +1,15 @@
 package com.dp.nebula.wormhole.plugins.writer.hbasewriter;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -17,7 +26,9 @@ public class HBaseWriterPeriphery implements IWriterPeriphery {
 	private final static Logger LOG = Logger
 			.getLogger(HBaseWriterPeriphery.class);
 
+	private final static String HIVE_DRIVER_NAME = "org.apache.hadoop.hive.jdbc.HiveDriver";
 	private final static int DEFAULT_WRITE_BUFFER_SIZE = 1024 * 1024;
+	private final static int DELETE_BATCH_SIZE = 1000;
 
 	private String htable;
 	private int deleteMode;
@@ -30,6 +41,9 @@ public class HBaseWriterPeriphery implements IWriterPeriphery {
 	private Boolean isDeleteData;
 	private long timeStampDel;
 	private Boolean isMajor_Compact;
+	private Boolean doPostDeleteDataFromHive;
+	private String hiveConnectionUrl;
+	private String selectRowkeysQuery;
 
 	@Override
 	public void prepare(IParam param, ISourceCounter counter) {
@@ -46,6 +60,9 @@ public class HBaseWriterPeriphery implements IWriterPeriphery {
 		writeAheadLog = param.getBooleanValue(ParamKey.writeAheadLog, true);
 		writebufferSize = param.getIntValue(ParamKey.writebufferSize,
 				DEFAULT_WRITE_BUFFER_SIZE);
+		hiveConnectionUrl = param.getValue(ParamKey.hiveConnectionUrl);
+		selectRowkeysQuery = param.getValue(ParamKey.selectRowkeysQuery);
+
 		Preconditions.checkArgument(writebufferSize > 0
 				&& writebufferSize <= 32 * 1024 * 1024,
 				"write buffer size must be within 0-32MB");
@@ -56,9 +73,21 @@ public class HBaseWriterPeriphery implements IWriterPeriphery {
 	}
 
 	@Override
-	public void doPost(IParam param, ITargetCounter counter,int faildSize) {
+	public void doPost(IParam param, ITargetCounter counter, int faildSize) {
+		doPostDeleteDataFromHive = param.getBooleanValue(
+				ParamKey.doPostDeleteDataFromHive, false);
+		if (doPostDeleteDataFromHive) {
+			try {
+				LOG.info("start to delete data from hive execution query:" + selectRowkeysQuery);
+				deleteRowkeysFromHive();
+			} catch (Exception e) {
+				throw new WormholeException(e,
+						JobStatus.POST_WRITE_FAILED.getStatus());
+			}
+		}
+
 		isDeleteData = param.getBooleanValue(ParamKey.isDeleteData);
-		timeStampDel = param.getLongValue(ParamKey.hoursDecTimeStamp);
+		timeStampDel = param.getLongValue(ParamKey.secondsDecTimeStamp);
 		isMajor_Compact = param.getBooleanValue(ParamKey.isMajor_Compact);
 
 		// add by mt
@@ -80,12 +109,13 @@ public class HBaseWriterPeriphery implements IWriterPeriphery {
 		} else {
 			LOG.info("HBase write error, skip doPost(delete table data)...");
 		}
-		
-		if (isMajor_Compact){
+
+		if (isMajor_Compact) {
 			try {
 				client.major_Compact(htable);
 			} catch (Exception e) {
-				LOG.info(String.format("table  %s major_compact exception",htable) );
+				LOG.info(String.format("table  %s major_compact exception",
+						htable));
 				throw new WormholeException(e,
 						JobStatus.POST_WRITE_FAILED.getStatus());
 			}
@@ -107,6 +137,41 @@ public class HBaseWriterPeriphery implements IWriterPeriphery {
 	public void rollback(IParam param) {
 		LOG.info("start to execute `delete table` by rollbackMode on rollback stage");
 		deleteTableByMode(rollbackMode);
+	}
+
+	private void deleteRowkeysFromHive() throws Exception {
+		List<String> rowkeysToDelete = new ArrayList<String>();
+		Class.forName(HIVE_DRIVER_NAME);
+		
+		Connection conn = DriverManager
+				.getConnection(hiveConnectionUrl, "", "");
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(selectRowkeysQuery);
+		int columnCount = rs.getMetaData().getColumnCount();
+		if (columnCount != 1) {
+			throw new IllegalArgumentException(
+					"it must be only one column(rowkey) specified. columnCount : "
+							+ columnCount);
+		}
+		
+		int rowCount = 0;
+		while (rs.next()) {
+			rowCount++;
+			rowkeysToDelete.add(rs.getString(1));
+			if (rowkeysToDelete.size() >= DELETE_BATCH_SIZE) {
+				client.deleteTableDataByRowkeys(rowkeysToDelete);
+				LOG.info("deleted rowkey count " + rowCount);
+				rowkeysToDelete.clear();
+			}
+		}
+		
+		if (rowkeysToDelete.size() > 0) {
+			client.deleteTableDataByRowkeys(rowkeysToDelete);
+			LOG.info("deleted rowkey count " + rowCount);
+		}
+		rs.close();
+		stmt.close();
+		conn.close();
 	}
 
 	private void deleteTableByMode(int mode) {

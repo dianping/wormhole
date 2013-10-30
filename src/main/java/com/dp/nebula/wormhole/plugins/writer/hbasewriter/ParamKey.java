@@ -100,12 +100,12 @@ public final class ParamKey {
 	
 	/*
 	  * @name: putTimeStamp
-	  * @description: hours to decrease the current_timestamp
+	  * @description: seconds to decrease the current_timestamp
 	  * @range:
-	  * @mandatory: 
+	  * @mandatory:
 	  * @default: 5
 	  */
-	public final static String hoursDecTimeStamp = "hoursDecTimeStamp"; 
+	public final static String secondsDecTimeStamp = "secondsDecTimeStamp"; 
 	
 	/*
 	  * @name: isDeleteData
@@ -122,8 +122,29 @@ public final class ParamKey {
 	  * @mandatory: true
 	  * @default: true
 	  */
-	public final static String isMajor_Compact = "isMajor_Compact"; 
-	
-	
-	
+	public final static String isMajor_Compact = "isMajor_Compact";
+	/*
+	  * @name: doPostDeleteDataFromHive
+	  * @description:whether to delete data at doPost stage from hive data
+	  * @range:true,false
+	  * @mandatory: true
+	  * @default:false
+	  */
+	public final static String doPostDeleteDataFromHive = "doPostDeleteDataFromHive";
+	/*
+	  * @name: hiveConnectionUrl
+	  * @description:hive connection url
+	  * @range:
+	  * @mandatory: false
+	  * @default:jdbc:hive://10.1.1.161:10000/default
+	  */
+	public final static String hiveConnectionUrl = "hiveConnectionUrl";
+	/*
+	  * @name: selectRowkeysQuery
+	  * @description: hive select query to fetch rowkeys
+	  * @range:
+	  * @mandatory: true
+	  * @default: 
+	  */
+	public final static String selectRowkeysQuery = "selectRowkeysQuery"; 
 }
